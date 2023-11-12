@@ -7,8 +7,9 @@ import (
 	"strconv"
 	"syscall"
 	"time"
-	"vkcore/mgo"
-	"vkcore/playw"
+
+	"github.com/suisrc/vkcore/mgo"
+	"github.com/suisrc/vkcore/playw"
 
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"

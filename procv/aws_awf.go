@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"net/url"
 	"strings"
-	"vkcore/playw"
+
+	"github.com/suisrc/vkcore/playw"
 
 	"github.com/playwright-community/playwright-go"
 	"github.com/sirupsen/logrus"

@@ -1,4 +1,4 @@
-module vkcore
+module github.com/suisrc/vkcore
 
 go 1.20
 
