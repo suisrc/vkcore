@@ -14,10 +14,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var (
-	CollName = "user"
-)
-
 // ==============================================================
 // 初始化 WAF 监控
 func InitWAF(domain, challengeJs string) func() {

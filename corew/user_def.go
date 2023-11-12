@@ -2,6 +2,10 @@ package corew
 
 import "time"
 
+var (
+	CollName = "user"
+)
+
 // 用户信息
 type UserData struct {
 	Username       string `json:"username,omitempty" bson:"username,omitempty"`
