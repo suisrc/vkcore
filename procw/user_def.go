@@ -1,4 +1,4 @@
-package corew
+package procw
 
 import "time"
 
