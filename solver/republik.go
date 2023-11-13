@@ -1,6 +1,6 @@
 package solver
 
-// 获取验证码， 通过capsolver
+// 这仅仅是一个demo测试，不要用于生产环境
 
 import (
 	"github.com/guonaihong/gout"

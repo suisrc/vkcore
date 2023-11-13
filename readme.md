@@ -1,12 +1,15 @@
 # 说明
 
+这是一个解决各种挑战的解决方案
 
-同时这也是最小化server框架
+## 特别声明
+
+所有的内容仅限于测试，不可用于生产
 
 ## golang
 
 ``` bash
-go mod init vkcc
+go mod init vkc
 go mod tidy
 go run main.go
 go build

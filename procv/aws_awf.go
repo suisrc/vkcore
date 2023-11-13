@@ -69,12 +69,12 @@ func ListenToUpdateAwsWAF(domain, challengeJs string, cc chan int, cb func(strin
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <!-- <meta name="referrer" content="origin" /> -->
-    <title>VKCC</title>
+    <title>VKC</title>
     <script type="text/javascript" src="https://` + challengeJs + `" defer="defer"></script>
   </head>
   <body>
     <h3>Aws WAF</h3>
-    <div id="vkcf-container" value="" class=""></div>
+    <div id="vkc-container" value="" class=""></div>
   </body>
   <script>
   </script>

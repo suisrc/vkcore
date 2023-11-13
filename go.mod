@@ -7,7 +7,6 @@ require (
 	github.com/bogdanfinn/fhttp v0.5.24
 	github.com/bogdanfinn/tls-client v1.6.1
 	github.com/google/uuid v1.3.0
-	github.com/google/wire v0.5.0
 	github.com/guonaihong/gout v0.3.8
 	github.com/playwright-community/playwright-go v0.3500.0
 	github.com/sirupsen/logrus v1.9.3

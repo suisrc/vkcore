@@ -45,10 +45,12 @@ func InitSolver(file string) {
 }
 
 // ============================================================
+// 空测试
 func SolverByDemo() (interface{}, error) {
 	return nil, fmt.Errorf("no solver")
 }
 
+// ============================================================
 // 测试使用
 func SolverByFile(conf string) (map[string]interface{}, error) {
 	SolverLck2.Lock()
