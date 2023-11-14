@@ -39,10 +39,25 @@ func LoginEmail(host string, port uint32, user, pass string) (*imapclient.Client
 	return client, nil
 }
 
+// 遍历所有邮箱的名字
+func ListMailbox(client *imapclient.Client) ([]string, error) {
+	// List mailboxes
+	boxs, err := client.List("", "*", nil).Collect()
+	if err != nil {
+		return nil, err
+	}
+	// Print mailbox information
+	names := []string{}
+	for _, box := range boxs {
+		names = append(names, box.Mailbox)
+	}
+	return names, nil
+}
+
 //========================================================================================================================
 
 // 获取邮件内容， num, 获取最后 num 个邮件
-func FetchEmail(client *imapclient.Client, inbox string, num uint32, emm bool, callback func(uint32, EmailInfo) error) (uint32, error) {
+func FetchEmail(client *imapclient.Client, inbox string, num, min uint32, emm bool, callback func(uint32, EmailInfo) error) (uint32, error) {
 	if inbox == "" {
 		inbox = "INBOX" // Default inbox
 	}
@@ -52,10 +67,14 @@ func FetchEmail(client *imapclient.Client, inbox string, num uint32, emm bool, c
 		return 0, err
 	}
 	ldx := box.NumMessages // Last message index
-	if ldx == 0 {
-		return 0, nil
-	} else if num <= 0 || ldx < num {
-		num = ldx // 获取邮件不能是负数
+	if num == 0 || ldx < num {
+		num = ldx // 获取所有邮件
+	}
+	if min > 0 && ldx-min < num {
+		num = ldx - min // 获取部分邮件
+	}
+	if num <= 0 {
+		return 0, fmt.Errorf("email number error: no email")
 	}
 	// 查询内容
 	opt := &imap.FetchOptions{
@@ -70,7 +89,7 @@ func FetchEmail(client *imapclient.Client, inbox string, num uint32, emm bool, c
 		seq := imap.SeqSetNum(ldx - idx)
 		fmd := client.Fetch(seq, opt).Next()
 		if fmd == nil {
-			return idx, fmt.Errorf("fetch error: no email")
+			return idx, fmt.Errorf("email fetch error: no email")
 		}
 		ems, err := fmd.Collect()
 		if err != nil {
