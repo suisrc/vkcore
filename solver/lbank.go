@@ -15,10 +15,13 @@ import (
 func LbankSolver1() (interface{}, error) {
 	return SolverByCapsolver("data/conf/capsolver.key", gout.H{
 		// ReCaptchaV3EnterpriseTaskProxyLess
+		// ReCaptchaV3M1TaskProxyLess
+		// ReCaptchaV3TaskProxyLess
 		"type":       "ReCaptchaV3M1TaskProxyLess",
 		"websiteURL": "https://www.lbank.com/zh-TW/login/",
 		"websiteKey": "6LfC6REjAAAAABTfzhLhAfAnrtRkJgbflWpFFId-",
 		"pageAction": "login",
+		"minScore":   0.9,
 	})
 }
 
