@@ -235,7 +235,7 @@ func (play *PlayWC) Request(method Method, address string, headers Header, body 
 		return // 无法处理请求路由
 	}
 	// 结果处理
-	response := func(resp playwright.Response, err error) {
+	response := func(page playwright.Page, resp playwright.Response, err error) {
 		if err != nil {
 			rerr = err
 		} else {
@@ -251,9 +251,9 @@ func (play *PlayWC) Request(method Method, address string, headers Header, body 
 //================================================================================================
 
 // 自定义路由的网络请求， 执行逻辑
-func (play *PlayWC) RequestByRouter(address string, router func(route playwright.Route), response func(playwright.Response, error)) {
+func (play *PlayWC) RequestByRouter(address string, router func(route playwright.Route), response func(playwright.Page, playwright.Response, error)) {
 	if play.closed {
-		response(nil, fmt.Errorf("client closed"))
+		response(nil, nil, fmt.Errorf("client closed"))
 		return
 	}
 	play.count++ // 请求次数统计， 无论成功与否
@@ -262,7 +262,7 @@ func (play *PlayWC) RequestByRouter(address string, router func(route playwright
 	page, err := play.NewPage(indx)
 	if err != nil {
 		// 创建页面失败
-		response(nil, err)
+		response(nil, nil, err)
 		return
 	}
 	// 请求结束后，关闭页面
@@ -271,13 +271,14 @@ func (play *PlayWC) RequestByRouter(address string, router func(route playwright
 	if router != nil {
 		err = page.Route("**/*", router)
 		if err != nil {
-			response(nil, err)
+			response(nil, nil, err)
 			return // 无法处理请求路由
 		}
 	}
 	// 发起请求
 	resp, err := page.Goto(address)
-	response(resp, err)
+	// page.WaitForResponse()
+	response(page, resp, err)
 }
 
 // 一次请求路由处理函数
@@ -347,7 +348,7 @@ func (play *PlayWC) Challenge(title, domain, cb_path, js_path string, callback f
 		done <- 1 // 结束信号
 	}, trace)
 	// 结果处理
-	response := func(resp playwright.Response, err error) {
+	response := func(page playwright.Page, resp playwright.Response, err error) {
 		if err != nil {
 			rerr = err
 			return
@@ -383,7 +384,7 @@ func (play *PlayWC) ChallengeAsync(title, domain, cb_path, js_path string, callb
 		}
 	}, trace)
 	// 结果处理
-	response := func(resp playwright.Response, err error) {
+	response := func(page playwright.Page, resp playwright.Response, err error) {
 		if err != nil {
 			rerr = err
 			return
@@ -477,7 +478,7 @@ func (play *PlayWC) RequestAsync(title, domain string, addrs []string, callback 
 			// 首页, html 为空时，返回默认首页
 			scripts := ""
 			for _, addr := range addrs {
-				script := `<script src="` + addr + `" async></script>`
+				script := `<script src="` + addr + `" await></script>`
 				scripts += script + "\n" // 多线程处理
 			}
 			index_html := `
@@ -487,9 +488,7 @@ func (play *PlayWC) RequestAsync(title, domain string, addrs []string, callback 
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<!-- <meta name="referrer" content="origin" /> -->
 <title>` + title + `</title>
-` + scripts + `
 </head>
 <body>
 <h3>` + title + `</h3>
@@ -509,10 +508,14 @@ func (play *PlayWC) RequestAsync(title, domain string, addrs []string, callback 
 		}
 	}
 	// 结果处理
-	response := func(resp playwright.Response, err error) {
+	response := func(page playwright.Page, resp playwright.Response, err error) {
 		if err != nil {
 			rerr = err
 			return
+		}
+		for _, addr := range addrs {
+			// 异步并发执行请求， 请求内容再callback中处理
+			page.Evaluate(`() => fetch("` + addr + `")`) // 发起请求
 		}
 		<-done // 等待结束信号
 	}

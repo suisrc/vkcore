@@ -12,16 +12,9 @@ venv/*
 
 bin
 bin/*
-
 data
 data/*
 
-__readme.md
-#demo_*
-__config.toml
-
+__*
 static/**/*.png
-
 error.log
-
-lbank

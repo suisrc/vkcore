@@ -1,6 +1,9 @@
 package mailv
 
-import "github.com/emersion/go-imap/v2/imapclient"
+import (
+	"github.com/emersion/go-imap/v2/imapclient"
+	"github.com/suisrc/vkcore/httpv"
+)
 
 var (
 	OutlookHost = "outlook.office365.com"
@@ -16,3 +19,17 @@ func CreateOutlook() (*imapclient.Client, error) {
 func LoginOutlook(user, pass string) (*imapclient.Client, error) {
 	return LoginEmail(OutlookHost, OutlookPort, user, pass)
 }
+
+// ==================================================================================================
+// 登录系统, 登录的信息会持久化到本地
+// https://login.live.com
+func LoginLive(cli *httpv.PlayWC, user, pass string) {
+}
+
+//==================================================================================================
+// 管理用户别名
+// https://account.live.com/names/Manage
+
+//==================================================================================================
+// 更改密码
+// https://account.live.com/password/Change
