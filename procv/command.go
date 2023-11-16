@@ -8,8 +8,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/suisrc/vkcore/httpv"
 	"github.com/suisrc/vkcore/mgo"
-	"github.com/suisrc/vkcore/playw"
 
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -131,8 +131,9 @@ func RunWithFind(find Find, exec Exec, cpath string, count int) {
 			return
 		}
 		defer cur.Close(ctx)
-		hdl, _ := playw.RequestCF()
-		defer hdl.CloseIdleConnections()
+		hdl, _ := httpv.NewPlayFC("")
+		defer hdl.Close()
+
 		usrs := []*UserData{}
 		err = cur.All(ctx, &usrs)
 		if err != nil {
@@ -165,7 +166,7 @@ func RunWithFind(find Find, exec Exec, cpath string, count int) {
 // ==============================================================
 // 多协程执行
 
-type Exec2 func(playw.HttpClient, *UserData, int, UserUpdate, chan *UserData, chan int) // 需要管控wc锁
+type Exec2 func(*httpv.PlayFC, *UserData, int, UserUpdate, chan *UserData, chan int) // 需要管控wc锁
 
 func RunWithExec2(find Find, exec Exec2, cpath string, tcnt, ucnt int) {
 	// 执行业务相关操作
@@ -176,7 +177,8 @@ func RunWithExec2(find Find, exec Exec2, cpath string, tcnt, ucnt int) {
 			return
 		}
 		defer cur.Close(ctx)
-		hdl, _ := playw.RequestCF()
+		hdl, _ := httpv.NewPlayFC("")
+		defer hdl.Close()
 		uc := make(chan *UserData, tcnt*2)
 		go func() {
 			for {

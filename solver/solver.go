@@ -38,6 +38,8 @@ func InitSolver(file string) {
 		bts, err := os.ReadFile(file)
 		if err != nil {
 			logrus.Panic(err) // 结束程序
+		} else if len(bts) == 0 {
+			logrus.Panic("no solver token") // 结束程序
 		}
 		// 设置capsolver key
 		SolverKey = string(bts)
@@ -70,11 +72,7 @@ func SolverByFile(conf string) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	if _, ok := val["captcha_id"]; !ok {
-		return nil, errors.New("no captcha_id")
-	}
-	return val, err
-
+	return val, nil
 }
 
 // =================================================================================
