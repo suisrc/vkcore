@@ -1,14 +1,16 @@
-package main
+package main_test
 
 import (
+	"testing"
+
 	"github.com/sirupsen/logrus"
 	"github.com/suisrc/vkcore/httpv"
 )
 
-// go run test/11_hvwc_req/m.go
+// go test ./test/10_hvwc -v -run Test11
 // 测试 playwirght 请求
 
-func main() {
+func Test11(t *testing.T) {
 	wright := httpv.NewPlaywright(1)
 	defer wright.Close()
 	path := "/wsc/vkc/vkcore/data/user/user1"

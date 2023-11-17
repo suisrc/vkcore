@@ -30,6 +30,9 @@ type PlayWatcher interface {
 	// 停止监视自动化脚本的变化
 	// Stop stops watching for changes in the automation scripts.
 	Stop()
+
+	// 关闭Page
+	Close()
 }
 
 //==============================================================================
@@ -37,21 +40,29 @@ type PlayWatcher interface {
 
 var _ PlayWatcher = (*watcher)(nil)
 
+var (
+	SFIC = false     // 截屏图片多份
+	SFII = uint32(5) // 截屏默认间隔
+)
+
 type watcher struct {
 	page  playwright.Page
 	fpath string        // 存放监控的位置
+	findx int           // 文件索引
 	delay time.Duration // 监控的间隔
 	done  chan int      // 停止监控
 }
 
 func NewWatcher(page playwright.Page, fpath string, delay uint32) PlayWatcher {
 	// 创建目录
-	dir := filepath.Dir(fpath)
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		err = os.MkdirAll(dir, 0755)
-		if err != nil {
-			logrus.Errorf("screenshot mkdir error: %s -> %s", fpath, err.Error())
-			return nil
+	if fpath != "" {
+		dir := filepath.Dir(fpath)
+		if _, err := os.Stat(dir); os.IsNotExist(err) {
+			err = os.MkdirAll(dir, 0755)
+			if err != nil {
+				logrus.Errorf("screenshot mkdir error: %s -> %s", fpath, err.Error())
+				return nil
+			}
 		}
 	}
 	if page == nil {
@@ -59,7 +70,7 @@ func NewWatcher(page playwright.Page, fpath string, delay uint32) PlayWatcher {
 		return nil
 	}
 	if delay == 0 {
-		delay = 5 // 默认5秒
+		delay = SFII // 默认6秒, 60s, 图片一次循环
 	}
 	return &watcher{
 		page:  page,
@@ -73,6 +84,9 @@ func (aa *watcher) Watch() error {
 	if aa.page == nil {
 		return fmt.Errorf("screenshot page is nil: %s", aa.fpath)
 	}
+	if aa.fpath == "" {
+		return fmt.Errorf("screenshot path is empty: %s", aa.fpath)
+	}
 	for {
 		// 定期截屏，便于测试和查看
 		select {
@@ -84,47 +98,67 @@ func (aa *watcher) Watch() error {
 		if aa.page == nil || aa.page.IsClosed() {
 			return nil // page已经关闭，停止监控
 		}
-		// 截屏page
-		bts, err := aa.page.Screenshot()
-		if err != nil {
-			logrus.Errorf("screenshot error: %s -> %s", aa.fpath, err.Error())
-			continue
+		if SFIC {
+			if err := Screenshot(aa.page, fmt.Sprintf("%s_%d.png", aa.fpath, aa.findx)); err != nil {
+				logrus.Errorf(err.Error())
+			} else {
+				aa.findx++
+				if aa.findx > 10 {
+					aa.findx = 0
+				}
+			}
+		} else {
+			if err := Screenshot(aa.page, fmt.Sprintf("%s.png", aa.fpath)); err != nil {
+				logrus.Errorf(err.Error())
+			}
 		}
-		// 解码截屏
-		img, _, err := image.Decode(bytes.NewReader(bts))
-		if err != nil {
-			logrus.Errorf("screenshot decode error: %s -> %s", aa.fpath, err.Error())
-			continue
-		}
-		// 添加时间戳
-		img, err = AddTimestampToImage(img, time.Now().Format("2006-01-02 15:04:05"))
-		if err != nil {
-			logrus.Errorf("screenshot add timestamp error: %s -> %s", aa.fpath, err.Error())
-			continue
-		}
-		// 编码截屏
-		buf := bytes.NewBuffer(nil)
-		err = png.Encode(buf, img)
-		if err != nil {
-			logrus.Errorf("screenshot encode error: %s -> %s", aa.fpath, err.Error())
-			continue
-		}
-		// 保存截屏, 持久化截屏图片
-		err = os.WriteFile(aa.fpath, buf.Bytes(), 0644)
-		if err != nil {
-			logrus.Errorf("screenshot write file error: %s -> %s", aa.fpath, err.Error())
-			continue
-		}
-		// next loop
 	}
 }
 
 func (aa *watcher) Stop() {
-	aa.page = nil // 关闭page
-	aa.done <- 1  // 停止监控
+	aa.done <- 1 // 停止监控
+}
+
+func (aa *watcher) Close() {
+	if aa.page != nil {
+		Screenshot(aa.page, aa.fpath+"_e.png")
+		aa.page.Close()
+	}
+	aa.Stop()
 }
 
 //==============================================================================
+
+func Screenshot(page playwright.Page, fpath string) error {
+	// 截屏
+	bts, err := page.Screenshot()
+	if err != nil {
+		return fmt.Errorf("screenshot error: %s -> %s", fpath, err.Error())
+	}
+	// 解码截屏
+	img, _, err := image.Decode(bytes.NewReader(bts))
+	if err != nil {
+		return fmt.Errorf("screenshot decode error: %s -> %s", fpath, err.Error())
+	}
+	// 添加时间戳
+	img, err = AddTimestampToImage(img, time.Now().Format("2006-01-02 15:04:05"))
+	if err != nil {
+		return fmt.Errorf("screenshot timestamp error: %s -> %s", fpath, err.Error())
+	}
+	// 编码截屏
+	buf := bytes.NewBuffer(nil)
+	err = png.Encode(buf, img)
+	if err != nil {
+		return fmt.Errorf("screenshot encode error: %s -> %s", fpath, err.Error())
+	}
+	// 保存截屏, 持久化截屏图片
+	err = os.WriteFile(fpath, buf.Bytes(), 0644)
+	if err != nil {
+		return fmt.Errorf("screenshot write error: %s -> %s", fpath, err.Error())
+	}
+
+	return nil
+}
 
 func AddTimestampToImage(img image.Image, timestamp string) (image.Image, error) {
 	rgba := image.NewRGBA(img.Bounds())

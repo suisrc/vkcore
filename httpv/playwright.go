@@ -153,7 +153,7 @@ func (play *PlayWC) Context() playwright.BrowserContext {
 	return play.context
 }
 
-func (play *PlayWC) NewPage(indx int) (page playwright.Page, rerr error) {
+func (play *PlayWC) NewPage(indx int) (page playwright.Page, pclr func(), rerr error) {
 	// 初始化浏览器控制器
 	play.once.Do(func() {
 		if play.wright.closed {
@@ -217,11 +217,16 @@ func (play *PlayWC) NewPage(indx int) (page playwright.Page, rerr error) {
 		play.fix_func(page) // 修复页面
 	}
 
+	var watcher PlayWatcher
 	// page.IsClosed()
 	if play.shot_dir != "" {
 		// 异步起动监控
-		go NewWatcher(page, fmt.Sprintf("%s_%d.png", play.shot_dir, indx), 5).Watch()
+		watcher = NewWatcher(page, fmt.Sprintf("%s_%d", play.shot_dir, indx), 0)
+		go watcher.Watch()
+	} else {
+		watcher = NewWatcher(page, "", 0)
 	}
+	pclr = watcher.Close
 
 	return
 }
@@ -259,14 +264,14 @@ func (play *PlayWC) RequestByRouter(address string, router func(route playwright
 	play.count++ // 请求次数统计， 无论成功与否
 	indx := play.count
 	// 获取浏览器页面
-	page, err := play.NewPage(indx)
+	page, pclr, err := play.NewPage(indx)
 	if err != nil {
 		// 创建页面失败
 		response(nil, nil, err)
 		return
 	}
 	// 请求结束后，关闭页面
-	defer page.Close()
+	defer pclr()
 	// 绑定请求路由器
 	if router != nil {
 		err = page.Route("**/*", router)

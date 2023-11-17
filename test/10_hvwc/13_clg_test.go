@@ -1,19 +1,20 @@
-package main
+package main_test
 
 import (
 	"os"
 	"strings"
+	"testing"
 	"time"
 
 	"github.com/sirupsen/logrus"
 	"github.com/suisrc/vkcore/httpv"
 )
 
-// go run test/13_hvwc_clg/m.go
+// go test ./test/10_hvwc -v -run Test13
 // 测试 playwirght 请求挑战, 异步调用
 
-func main() {
-	bts, _ := os.ReadFile("data/conf/12_hvwc_clg.txt")
+func Test13(t *testing.T) {
+	bts, _ := os.ReadFile("../../data/conf/12_hvwc_clg.txt")
 	str_ns := strings.SplitN(string(bts), " ", 4)
 	title, domain, cb_path, js_path := str_ns[0], str_ns[1], str_ns[2], str_ns[3]
 

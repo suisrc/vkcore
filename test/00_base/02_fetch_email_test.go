@@ -1,19 +1,20 @@
-package main
+package main_test
 
 import (
 	"encoding/json"
 	"os"
 	"strings"
+	"testing"
 
 	"github.com/sirupsen/logrus"
 	"github.com/suisrc/vkcore/mailv"
 )
 
-// go run test/02_fetch_email/m.go
+// go test ./test/00_base -v -run Test02
 // 测试获取邮件
 
-func main() {
-	bts, _ := os.ReadFile("data/conf/02_email.txt")
+func Test02(t *testing.T) {
+	bts, _ := os.ReadFile("../../data/conf/02_email.txt")
 	str_ns := strings.SplitN(string(bts), "-------", 2)
 	email, passw := str_ns[0], str_ns[1]
 

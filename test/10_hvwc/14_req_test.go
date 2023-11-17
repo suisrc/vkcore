@@ -1,8 +1,9 @@
-package main
+package main_test
 
 import (
 	"net/url"
 	"sync"
+	"testing"
 	"time"
 
 	"github.com/playwright-community/playwright-go"
@@ -10,11 +11,11 @@ import (
 	"github.com/suisrc/vkcore/httpv"
 )
 
-// go run test/14_hvwc_req/m.go
+// go test ./test/10_hvwc -v -run Test14
 // 测试 playwirght 异步请求
 // 这里本想让请求多线程异步处理，但是实际却并不是很理想，js调用并不是异步的，而是同步的， 与 async/await 无关
 
-func main() {
+func Test14(t *testing.T) {
 
 	wright := httpv.NewPlaywright(1)
 	defer wright.Close()

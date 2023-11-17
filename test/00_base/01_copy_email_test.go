@@ -1,8 +1,9 @@
-package main
+package main_test
 
 import (
 	"context"
 	"strings"
+	"testing"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -14,17 +15,17 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// go run test/__01_copy_email/m.go
+// go test ./test/00_base -v -run Test01
 // 拷贝和同步outlook邮箱数据
 
-func main() {
+func Test01(t *testing.T) {
 	// CopyData()
 	// CreateIndex()
 	UpdateData()
 }
 
 func UpdateData() {
-	cpath := "data/conf/mongo_olk.json"
+	cpath := "../../data/conf/mongo_olk.json"
 
 	cli, clx, err := mgo.NewDatabaseByFile(cpath)
 	if err != nil {
@@ -66,8 +67,8 @@ func UpdateData() {
 //=========================================================
 
 func CopyData() {
-	cpath := "data/conf/mongo_olk.json"
-	fpath := "data/conf/outlook_1.txt"
+	cpath := "../../data/conf/mongo_olk.json"
+	fpath := "../../data/conf/outlook_1.txt"
 
 	// 读取文件
 	lines, err := procv.ReadFileLines(fpath)
@@ -113,7 +114,7 @@ func CopyData() {
 }
 
 func CreateIndex() {
-	cpath := "data/conf/mongo_olk.json"
+	cpath := "../../data/conf/mongo_olk.json"
 
 	cli, clx, err := mgo.NewDatabaseByFile(cpath)
 	if err != nil {
