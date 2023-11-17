@@ -7,7 +7,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/suisrc/vkcore/httpv"
-	"github.com/suisrc/vkcore/mailv"
+	"github.com/suisrc/vkcore/mailo"
 )
 
 // go test ./test/20_outlook -v -run Test21
@@ -29,7 +29,7 @@ func Test21(t *testing.T) {
 		logrus.Panic(err)
 	}
 	// 登录页面微软账户系统
-	err = mailv.LoginLive(cli, email, passw)
+	err = mailo.LoginLive(cli, email, passw)
 	if err != nil {
 		logrus.Panic(err)
 	}

@@ -10,7 +10,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/suisrc/vkcore/httpv"
-	"github.com/suisrc/vkcore/mailv"
+	"github.com/suisrc/vkcore/mailo"
 	"github.com/suisrc/vkcore/mgo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -51,7 +51,7 @@ func Test23(t *testing.T) {
 	}
 
 	// 登录页面微软账户系统
-	err = mailv.ManageLiveNames(cli, email, passw, mailer, []string{"1", "2"})
+	err = mailo.ManageLiveNames(cli, email, passw, mailer, []string{"1", "2"})
 	if err != nil {
 		logrus.Panic(err)
 	}
