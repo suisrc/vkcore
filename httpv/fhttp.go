@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"io"
 
-	http "github.com/bogdanfinn/fhttp"
-	tls_client "github.com/bogdanfinn/tls-client"
+	fhttp "github.com/bogdanfinn/fhttp"
+	tlsclient "github.com/bogdanfinn/tls-client"
 	"github.com/bogdanfinn/tls-client/profiles"
 )
 
@@ -18,7 +18,7 @@ var _ PlayClient = (*PlayFC)(nil)
 
 // fhttp client
 type PlayFC struct {
-	client tls_client.HttpClient
+	client tlsclient.HttpClient
 	count  int
 	closed bool
 }
@@ -28,14 +28,14 @@ func NewPlayFCD() (*PlayFC, error) {
 }
 
 func NewPlayFC(proxy string) (*PlayFC, error) {
-	jar := tls_client.NewCookieJar()
-	options := []tls_client.HttpClientOption{
-		tls_client.WithTimeoutSeconds(30),
-		tls_client.WithClientProfile(profiles.Firefox_117), // 模拟 Firefox 浏览器
-		tls_client.WithNotFollowRedirects(),
-		tls_client.WithCookieJar(jar), // create cookieJar instance and pass it as argument
+	jar := tlsclient.NewCookieJar()
+	options := []tlsclient.HttpClientOption{
+		tlsclient.WithTimeoutSeconds(30),
+		tlsclient.WithClientProfile(profiles.Firefox_117), // 模拟 Firefox 浏览器
+		tlsclient.WithNotFollowRedirects(),
+		tlsclient.WithCookieJar(jar), // create cookieJar instance and pass it as argument
 	}
-	client, err := tls_client.NewHttpClient(tls_client.NewNoopLogger(), options...)
+	client, err := tlsclient.NewHttpClient(tlsclient.NewNoopLogger(), options...)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (play *PlayFC) Request(method Method, address string, headers Header, body 
 		rerr = err
 		return
 	}
-	resp := rsp.(*http.Response)
+	resp := rsp.(*fhttp.Response)
 	defer resp.Body.Close()
 	// 读取响应
 	code = resp.StatusCode
@@ -98,7 +98,7 @@ func (play *PlayFC) ReqResp(method Method, address string, headers Header, body 
 			return
 		}
 	}
-	req, err := http.NewRequest(string(method), address, inr)
+	req, err := fhttp.NewRequest(string(method), address, inr)
 	if err != nil {
 		rerr = err // 创建请求失败
 		return
@@ -110,11 +110,11 @@ func (play *PlayFC) ReqResp(method Method, address string, headers Header, body 
 		uagent = RandomUserAgent() // 随机选择一个 User-Agent
 	}
 	// 设置默认请求头
-	req.Header = http.Header{
+	req.Header = fhttp.Header{
 		"accept":          {accept},
 		"accept-language": {"en-US,en;q=0.9"}, // zh-CN,zh;q=0.9,en;q=0.8
 		"user-agent":      {uagent},
-		http.HeaderOrderKey: {
+		fhttp.HeaderOrderKey: {
 			"accept",
 			"accept-language",
 			"user-agent",
