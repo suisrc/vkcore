@@ -10,6 +10,9 @@ docs/generated
 pocs/*
 venv/*
 
+model
+model/*
+
 bin
 bin/*
 data

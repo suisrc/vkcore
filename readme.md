@@ -43,3 +43,18 @@ playwright install --with-deps
 
 chown root:root ~
 ```
+
+
+## voska
+
+model默认位置 data/vosk
+
+```bash
+apt-get install -y unzip
+cd data
+&& curl -Lo model.zip https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip \
+&& unzip model.zip && mv vosk-model-small-en-us-0.15 vosk \
+&& curl -Lo vosk.zip  https://github.com/alphacep/vosk-api/releases/download/v0.3.45/vosk-linux-x86_64-0.3.45.zip \
+&& unzip vosk.zip && mv vosk-linux-x86_64-0.3.45 vosk-so \
+&& cp vosk-so/vosk_api.h /usr/include/ && cp vosk-so/libvosk.so /usr/lib/ \
+```
