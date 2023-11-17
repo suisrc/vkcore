@@ -10,6 +10,7 @@ import (
 
 	"github.com/suisrc/vkcore/httpv"
 	"github.com/suisrc/vkcore/mgo"
+	"github.com/suisrc/vkcore/solver"
 
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,10 +21,10 @@ import (
 func InitWAF(domain, challengeJs string) func() {
 	// 初始化 AWS WAF 令牌
 	ccc := make(chan int)
-	go ListenToAwsWAF(domain, challengeJs, ccc)
+	go solver.ListenToAwsWAF(domain, challengeJs, ccc)
 	// ccc <- 1 // 也可以关闭监听 WAF 浏览器
 	// 脚本执行过程，不要关闭，用于实时更新WAF
-	for AwsWaf == "" {
+	for solver.AwsWaf == "" {
 		logrus.Info("main process wait for waf token init...")
 		time.Sleep(time.Second) // 等待 WAF 初始化令牌
 	}
