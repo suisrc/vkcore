@@ -28,7 +28,7 @@ func LbankSolver1() (interface{}, error) {
 // =================================================================================
 // https://2captcha.com/api-docs/recaptcha-v3
 func LbankSolver2() (interface{}, error) {
-	return SolverByCapsolver("data/conf/2captcha.key", gout.H{
+	return SolverBy2Captcha("data/conf/2captcha.key", gout.H{
 		"type":         "RecaptchaV3TaskProxyless",
 		"websiteURL":   "https://www.lbank.com/zh-TW/login/",
 		"websiteKey":   "6LfC6REjAAAAABTfzhLhAfAnrtRkJgbflWpFFId-",

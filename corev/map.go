@@ -9,18 +9,19 @@ import (
 
 func GetMapValue(m map[string]interface{}, key, sep string) (interface{}, bool) {
 	keys := strings.Split(key, sep)
-	for _, k := range keys {
-		v, ok := m[k]
-		if !ok {
+	var curr interface{} = m
+	var next bool
+	for _, kk := range keys {
+		if vv, ok := curr.(map[string]interface{}); ok {
+			curr, next = vv[kk]
+		} else {
+			next = false
+		}
+		if !next {
 			return nil, false
 		}
-		if vm, ok := v.(map[string]interface{}); ok {
-			m = vm
-		} else {
-			return v, true
-		}
 	}
-	return nil, false
+	return curr, true
 }
 
 // AssertAsMap ...

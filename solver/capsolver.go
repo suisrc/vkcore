@@ -46,7 +46,7 @@ func SolverByCapsolver(conf string, task interface{}) (map[string]interface{}, e
 		if err != nil {
 			return nil, err
 		}
-		if len(bts) < 64 {
+		if len(bts) < 128 {
 			logrus.Info("[", tmp, "]", code, string(bts))
 		} else {
 			logrus.Info("[", tmp, "]", code, string(bts[:127])+"...")

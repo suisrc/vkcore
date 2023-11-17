@@ -15,7 +15,7 @@ import (
 func SolverBy2Captcha(conf string, task interface{}) (map[string]interface{}, error) {
 	InitSolver(conf)
 	tmp := uuid.New().String()[:8]
-	logrus.Info("[", tmp, "]solve geetest task...")
+	logrus.Info("[", tmp, "]solve task...")
 	bts := []byte{}
 	err := gout.POST("https://api.2captcha.com/createTask").SetJSON(gout.H{
 		"clientKey": SolverKey,
@@ -46,7 +46,7 @@ func SolverBy2Captcha(conf string, task interface{}) (map[string]interface{}, er
 		if err != nil {
 			return nil, err
 		}
-		if len(bts) < 64 {
+		if len(bts) < 128 {
 			logrus.Info("[", tmp, "]", code, string(bts))
 		} else {
 			logrus.Info("[", tmp, "]", code, string(bts[:127])+"...")
