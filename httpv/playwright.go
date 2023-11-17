@@ -231,7 +231,7 @@ func (play *PlayWC) NewPage(indx int) (page playwright.Page, pclr func(), rerr e
 	return
 }
 
-// 发起网络请求， PS: 这里的 address 包含了 path 和 query， 外部可以使用 url 进行格式化处理
+// 发起网络请求， PS: 这里的 address 包含了 path 和 query， 外部可以使用 url 进行格式化处理， 这里， uagent无效
 func (play *PlayWC) Request(method Method, address string, headers Header, body interface{}, accept, uagent string) (code int, data []byte, rerr error) {
 	// 业务路由
 	router, err := RouteOnce(method, headers, body, accept)
@@ -247,6 +247,23 @@ func (play *PlayWC) Request(method Method, address string, headers Header, body 
 			code = resp.Status()
 			data, rerr = resp.Body()
 		}
+	}
+	// 发起请求
+	play.RequestByRouter(address, router, response)
+	return
+}
+
+// ReqResp 发送请求
+func (play *PlayWC) ReqResp(method Method, address string, headers Header, body interface{}, accept, uagent string) (resp interface{}, rerr error) {
+	// 业务路由
+	router, err := RouteOnce(method, headers, body, accept)
+	if err != nil {
+		rerr = err
+		return // 无法处理请求路由
+	}
+	// 结果处理
+	response := func(page playwright.Page, rsp playwright.Response, err error) {
+		resp, rerr = rsp, err
 	}
 	// 发起请求
 	play.RequestByRouter(address, router, response)

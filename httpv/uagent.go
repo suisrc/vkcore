@@ -10,30 +10,11 @@ var uaGens = []func() string{
 	GenFirefoxUA,
 	GenChromeUA,
 	GenEdgeUA,
-	GenOperaUA,
 }
 
 var uaGensMobile = []func() string{
 	GenMobilePixel7UA,
-	GenMobilePixel6UA,
-	GenMobilePixel5UA,
-	GenMobilePixel4UA,
-	GenMobileNexus10UA,
 }
-
-// // RandomUserAgent generates a random DESKTOP browser user-agent on every requests
-// func RandomUserAgent(c *colly.Collector) {
-// 	c.OnRequest(func(r *colly.Request) {
-// 		r.Headers.Set("User-Agent", uaGens[rand.Intn(len(uaGens))]())
-// 	})
-// }
-
-// // RandomMobileUserAgent generates a random MOBILE browser user-agent on every requests
-// func RandomMobileUserAgent(c *colly.Collector) {
-// 	c.OnRequest(func(r *colly.Request) {
-// 		r.Headers.Set("User-Agent", uaGensMobile[rand.Intn(len(uaGensMobile))]())
-// 	})
-// }
 
 func RandomUserAgent() string {
 	return uaGens[rand.Intn(len(uaGens))]()
@@ -66,6 +47,9 @@ var ffVersions = []float32{
 	115.0,
 	116.0,
 	117.0,
+	118.0,
+	119.0,
+	120.0,
 }
 
 var chromeVersions = []string{
@@ -243,48 +227,6 @@ var edgeVersions = []string{
 	"113.0.0.0,113.0.1774.3",
 }
 
-var operaVersions = []string{
-	// NOTE: Only version released after Jan 1, 2023 will be listed.
-	// Data source: https://blogs.opera.com/desktop/
-
-	// https://blogs.opera.com/desktop/changelog-for-96/
-	"110.0.5449.0,96.0.4640.0",
-	"110.0.5464.2,96.0.4653.0",
-	"110.0.5464.2,96.0.4660.0",
-	"110.0.5481.30,96.0.4674.0",
-	"110.0.5481.30,96.0.4691.0",
-	"110.0.5481.30,96.0.4693.12",
-	"110.0.5481.77,96.0.4693.16",
-	"110.0.5481.100,96.0.4693.20",
-	"110.0.5481.178,96.0.4693.31",
-	"110.0.5481.178,96.0.4693.50",
-	"110.0.5481.192,96.0.4693.80",
-
-	// https://blogs.opera.com/desktop/changelog-for-97/
-	"111.0.5532.2,97.0.4711.0",
-	"111.0.5532.2,97.0.4704.0",
-	"111.0.5532.2,97.0.4697.0",
-	"111.0.5562.0,97.0.4718.0",
-	"111.0.5563.19,97.0.4719.4",
-	"111.0.5563.19,97.0.4719.11",
-	"111.0.5563.41,97.0.4719.17",
-	"111.0.5563.65,97.0.4719.26",
-	"111.0.5563.65,97.0.4719.28",
-	"111.0.5563.111,97.0.4719.43",
-	"111.0.5563.147,97.0.4719.63",
-	"111.0.5563.147,97.0.4719.83",
-
-	// https://blogs.opera.com/desktop/changelog-for-98/
-	"112.0.5596.2,98.0.4756.0",
-	"112.0.5596.2,98.0.4746.0",
-	"112.0.5615.20,98.0.4759.1",
-	"112.0.5615.50,98.0.4759.3",
-	"112.0.5615.87,98.0.4759.6",
-	"112.0.5615.165,98.0.4759.15",
-	"112.0.5615.165,98.0.4759.21",
-	"112.0.5615.165,98.0.4759.39",
-}
-
 var pixel7AndroidVersions = []string{
 	// Data source:
 	// - https://developer.android.com/about/versions
@@ -292,165 +234,7 @@ var pixel7AndroidVersions = []string{
 	"13",
 }
 
-var pixel6AndroidVersions = []string{
-	// Data source:
-	// - https://developer.android.com/about/versions
-	// - https://source.android.com/docs/setup/about/build-numbers#source-code-tags-and-builds
-	"12",
-	"13",
-}
-
-var pixel5AndroidVersions = []string{
-	// Data source:
-	// - https://developer.android.com/about/versions
-	// - https://source.android.com/docs/setup/about/build-numbers#source-code-tags-and-builds
-	"11",
-	"12",
-	"13",
-}
-
-var pixel4AndroidVersions = []string{
-	// Data source:
-	// - https://developer.android.com/about/versions
-	// - https://source.android.com/docs/setup/about/build-numbers#source-code-tags-and-builds
-	"10",
-	"11",
-	"12",
-	"13",
-}
-
-var nexus10AndroidVersions = []string{
-	// Data source:
-	// - https://developer.android.com/about/versions
-	// - https://source.android.com/docs/setup/about/build-numbers#source-code-tags-and-builds
-	"4.4.2",
-	"4.4.4",
-	"5.0",
-	"5.0.1",
-	"5.0.2",
-	"5.1",
-	"5.1.1",
-}
-
-var nexus10Builds = []string{
-	// Data source: https://source.android.com/docs/setup/about/build-numbers#source-code-tags-and-builds
-
-	"LMY49M", // android-5.1.1_r38 (Lollipop)
-	"LMY49J", // android-5.1.1_r37 (Lollipop)
-	"LMY49I", // android-5.1.1_r36 (Lollipop)
-	"LMY49H", // android-5.1.1_r35 (Lollipop)
-	"LMY49G", // android-5.1.1_r34 (Lollipop)
-	"LMY49F", // android-5.1.1_r33 (Lollipop)
-	"LMY48Z", // android-5.1.1_r30 (Lollipop)
-	"LMY48X", // android-5.1.1_r25 (Lollipop)
-	"LMY48T", // android-5.1.1_r19 (Lollipop)
-	"LMY48M", // android-5.1.1_r14 (Lollipop)
-	"LMY48I", // android-5.1.1_r9 (Lollipop)
-	"LMY47V", // android-5.1.1_r1 (Lollipop)
-	"LMY47D", // android-5.1.0_r1 (Lollipop)
-	"LRX22G", // android-5.0.2_r1 (Lollipop)
-	"LRX22C", // android-5.0.1_r1 (Lollipop)
-	"LRX21P", // android-5.0.0_r4.0.1 (Lollipop)
-	"KTU84P", // android-4.4.4_r1 (KitKat)
-	"KTU84L", // android-4.4.3_r1 (KitKat)
-	"KOT49H", // android-4.4.2_r1 (KitKat)
-	"KOT49E", // android-4.4.1_r1 (KitKat)
-	"KRT16S", // android-4.4_r1.2 (KitKat)
-	"JWR66Y", // android-4.3_r1.1 (Jelly Bean)
-	"JWR66V", // android-4.3_r1 (Jelly Bean)
-	"JWR66N", // android-4.3_r0.9.1 (Jelly Bean)
-	"JDQ39 ", // android-4.2.2_r1 (Jelly Bean)
-	"JOP40F", // android-4.2.1_r1.1 (Jelly Bean)
-	"JOP40D", // android-4.2.1_r1 (Jelly Bean)
-	"JOP40C", // android-4.2_r1 (Jelly Bean)
-}
-
 var osStrings = []string{
-	// // MacOS - High Sierra
-	// "Macintosh; Intel Mac OS X 10_13",
-	// "Macintosh; Intel Mac OS X 10_13_1",
-	// "Macintosh; Intel Mac OS X 10_13_2",
-	// "Macintosh; Intel Mac OS X 10_13_3",
-	// "Macintosh; Intel Mac OS X 10_13_4",
-	// "Macintosh; Intel Mac OS X 10_13_5",
-	// "Macintosh; Intel Mac OS X 10_13_6",
-
-	// // MacOS - Mojave
-	// "Macintosh; Intel Mac OS X 10_14",
-	// "Macintosh; Intel Mac OS X 10_14_1",
-	// "Macintosh; Intel Mac OS X 10_14_2",
-	// "Macintosh; Intel Mac OS X 10_14_3",
-	// "Macintosh; Intel Mac OS X 10_14_4",
-	// "Macintosh; Intel Mac OS X 10_14_5",
-	// "Macintosh; Intel Mac OS X 10_14_6",
-
-	// // MacOS - Catalina
-	// "Macintosh; Intel Mac OS X 10_15",
-	// "Macintosh; Intel Mac OS X 10_15_1",
-	// "Macintosh; Intel Mac OS X 10_15_2",
-	// "Macintosh; Intel Mac OS X 10_15_3",
-	// "Macintosh; Intel Mac OS X 10_15_4",
-	// "Macintosh; Intel Mac OS X 10_15_5",
-	// "Macintosh; Intel Mac OS X 10_15_6",
-	// "Macintosh; Intel Mac OS X 10_15_7",
-
-	// // MacOS - Big Sur
-	// "Macintosh; Intel Mac OS X 11_0",
-	// "Macintosh; Intel Mac OS X 11_0_1",
-	// "Macintosh; Intel Mac OS X 11_1",
-	// "Macintosh; Intel Mac OS X 11_2",
-	// "Macintosh; Intel Mac OS X 11_2_1",
-	// "Macintosh; Intel Mac OS X 11_2_2",
-	// "Macintosh; Intel Mac OS X 11_2_3",
-	// "Macintosh; Intel Mac OS X 11_3",
-	// "Macintosh; Intel Mac OS X 11_3_1",
-	// "Macintosh; Intel Mac OS X 11_4",
-	// "Macintosh; Intel Mac OS X 11_5",
-	// "Macintosh; Intel Mac OS X 11_5_1",
-	// "Macintosh; Intel Mac OS X 11_5_2",
-	// "Macintosh; Intel Mac OS X 11_6",
-	// "Macintosh; Intel Mac OS X 11_6_1",
-	// "Macintosh; Intel Mac OS X 11_6_2",
-	// "Macintosh; Intel Mac OS X 11_6_3",
-	// "Macintosh; Intel Mac OS X 11_6_4",
-	// "Macintosh; Intel Mac OS X 11_6_5",
-	// "Macintosh; Intel Mac OS X 11_6_6",
-	// "Macintosh; Intel Mac OS X 11_6_7",
-	// "Macintosh; Intel Mac OS X 11_6_8",
-	// "Macintosh; Intel Mac OS X 11_7",
-	// "Macintosh; Intel Mac OS X 11_7_1",
-	// "Macintosh; Intel Mac OS X 11_7_2",
-	// "Macintosh; Intel Mac OS X 11_7_3",
-	// "Macintosh; Intel Mac OS X 11_7_4",
-	// "Macintosh; Intel Mac OS X 11_7_5",
-	// "Macintosh; Intel Mac OS X 11_7_6",
-
-	// // MacOS - Monterey
-	// "Macintosh; Intel Mac OS X 12_0",
-	// "Macintosh; Intel Mac OS X 12_0_1",
-	// "Macintosh; Intel Mac OS X 12_1",
-	// "Macintosh; Intel Mac OS X 12_2",
-	// "Macintosh; Intel Mac OS X 12_2_1",
-	// "Macintosh; Intel Mac OS X 12_3",
-	// "Macintosh; Intel Mac OS X 12_3_1",
-	// "Macintosh; Intel Mac OS X 12_4",
-	// "Macintosh; Intel Mac OS X 12_5",
-	// "Macintosh; Intel Mac OS X 12_5_1",
-	// "Macintosh; Intel Mac OS X 12_6",
-	// "Macintosh; Intel Mac OS X 12_6_1",
-	// "Macintosh; Intel Mac OS X 12_6_2",
-	// "Macintosh; Intel Mac OS X 12_6_3",
-	// "Macintosh; Intel Mac OS X 12_6_4",
-	// "Macintosh; Intel Mac OS X 12_6_5",
-
-	// // MacOS - Ventura
-	// "Macintosh; Intel Mac OS X 13_0",
-	// "Macintosh; Intel Mac OS X 13_0_1",
-	// "Macintosh; Intel Mac OS X 13_1",
-	// "Macintosh; Intel Mac OS X 13_2",
-	// "Macintosh; Intel Mac OS X 13_2_1",
-	// "Macintosh; Intel Mac OS X 13_3",
-	// "Macintosh; Intel Mac OS X 13_3_1",
 
 	// Windows
 	"Windows NT 10.0; Win64; x64",
@@ -491,17 +275,6 @@ func GenEdgeUA() string {
 	return fmt.Sprintf("Mozilla/5.0 (%s) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%s Safari/537.36 Edg/%s", os, chromeVersion, edgeVersion)
 }
 
-// Generates Opera Browser User-Agent (Desktop)
-//
-// -> "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_3_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 OPR/98.0.4759.3"
-func GenOperaUA() string {
-	version := operaVersions[rand.Intn(len(operaVersions))]
-	chromeVersion := strings.Split(version, ",")[0]
-	operaVersion := strings.Split(version, ",")[1]
-	os := osStrings[rand.Intn(len(osStrings))]
-	return fmt.Sprintf("Mozilla/5.0 (%s) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%s Safari/537.36 OPR/%s", os, chromeVersion, operaVersion)
-}
-
 // Generates Pixel 7 Browser User-Agent (Mobile)
 //
 // -> Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36
@@ -511,39 +284,16 @@ func GenMobilePixel7UA() string {
 	return fmt.Sprintf("Mozilla/5.0 (Linux; Android %s; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%s Safari/537.36", android, chrome)
 }
 
-// Generates Pixel 6 Browser User-Agent (Mobile)
-//
-// -> "Mozilla/5.0 (Linux; Android 13; Pixel 6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36"
-func GenMobilePixel6UA() string {
-	android := pixel6AndroidVersions[rand.Intn(len(pixel6AndroidVersions))]
-	chrome := chromeVersions[rand.Intn(len(chromeVersions))]
-	return fmt.Sprintf("Mozilla/5.0 (Linux; Android %s; Pixel 6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%s Safari/537.36", android, chrome)
-}
+// // RandomUserAgent generates a random DESKTOP browser user-agent on every requests
+// func RandomUserAgent(c *colly.Collector) {
+// 	c.OnRequest(func(r *colly.Request) {
+// 		r.Headers.Set("User-Agent", uaGens[rand.Intn(len(uaGens))]())
+// 	})
+// }
 
-// Generates Pixel 5 Browser User-Agent (Mobile)
-//
-// -> "Mozilla/5.0 (Linux; Android 13; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36"
-func GenMobilePixel5UA() string {
-	android := pixel5AndroidVersions[rand.Intn(len(pixel5AndroidVersions))]
-	chrome := chromeVersions[rand.Intn(len(chromeVersions))]
-	return fmt.Sprintf("Mozilla/5.0 (Linux; Android %s; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%s Safari/537.36", android, chrome)
-}
-
-// Generates Pixel 4 Browser User-Agent (Mobile)
-//
-// -> "Mozilla/5.0 (Linux; Android 13; Pixel 4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36"
-func GenMobilePixel4UA() string {
-	android := pixel4AndroidVersions[rand.Intn(len(pixel4AndroidVersions))]
-	chrome := chromeVersions[rand.Intn(len(chromeVersions))]
-	return fmt.Sprintf("Mozilla/5.0 (Linux; Android %s; Pixel 4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%s Safari/537.36", android, chrome)
-}
-
-// Generates Nexus 10 Browser User-Agent (Mobile)
-//
-// -> "Mozilla/5.0 (Linux; Android 5.1.1; Nexus 10 Build/LMY48T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.91 Safari/537.36"
-func GenMobileNexus10UA() string {
-	build := nexus10Builds[rand.Intn(len(nexus10Builds))]
-	android := nexus10AndroidVersions[rand.Intn(len(nexus10AndroidVersions))]
-	chrome := chromeVersions[rand.Intn(len(chromeVersions))]
-	return fmt.Sprintf("Mozilla/5.0 (Linux; Android %s; Nexus 10 Build/%s) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%s Safari/537.36", android, build, chrome)
-}
+// // RandomMobileUserAgent generates a random MOBILE browser user-agent on every requests
+// func RandomMobileUserAgent(c *colly.Collector) {
+// 	c.OnRequest(func(r *colly.Request) {
+// 		r.Headers.Set("User-Agent", uaGensMobile[rand.Intn(len(uaGensMobile))]())
+// 	})
+// }

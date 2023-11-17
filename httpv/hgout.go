@@ -44,6 +44,7 @@ func (play *PlayHC) Count() int {
 	return play.count
 }
 
+// 发起网络请求， PS: 这里的 address 包含了 path 和 query， 外部可以使用 url 进行格式化处理， 这里， uagent无效
 func (play *PlayHC) Request(method Method, address string, headers Header, body interface{}, accept, uagent string) (code int, data []byte, rerr error) {
 	if play.closed {
 		rerr = fmt.Errorf("client closed")
@@ -81,5 +82,11 @@ func (play *PlayHC) Request(method Method, address string, headers Header, body 
 	}
 	play.client.DataFlow.Code(&code).BindBody(&data)
 	rerr = play.client.DataFlow.Do()
+	return
+}
+
+// ReqResp 发送请求
+func (play *PlayHC) ReqResp(method Method, address string, headers Header, body interface{}, accept, uagent string) (resp interface{}, rerr error) {
+	_, resp, rerr = play.Request(method, address, headers, body, accept, uagent)
 	return
 }

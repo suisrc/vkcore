@@ -59,7 +59,24 @@ func (play *PlayFC) Count() int {
 	return play.count
 }
 
+// 发起网络请求， PS: 这里的 address 包含了 path 和 query， 外部可以使用 url 进行格式化处理， 这里， uagent无效
 func (play *PlayFC) Request(method Method, address string, headers Header, body interface{}, accept, uagent string) (code int, data []byte, rerr error) {
+	// 发送请求
+	rsp, err := play.ReqResp(method, address, headers, body, accept, uagent)
+	if err != nil {
+		rerr = err
+		return
+	}
+	resp := rsp.(*http.Response)
+	defer resp.Body.Close()
+	// 读取响应
+	code = resp.StatusCode
+	body, rerr = io.ReadAll(resp.Body)
+	return
+}
+
+// ReqResp 发送请求
+func (play *PlayFC) ReqResp(method Method, address string, headers Header, body interface{}, accept, uagent string) (resp interface{}, rerr error) {
 	if play.closed {
 		rerr = fmt.Errorf("client closed")
 		return
@@ -67,7 +84,7 @@ func (play *PlayFC) Request(method Method, address string, headers Header, body 
 	play.count++ // 请求次数统计， 无论成功与否
 	// 创建请求
 	inr := io.Reader(nil)
-	if data != nil {
+	if body != nil {
 		if bts, ok := body.([]byte); ok {
 			inr = bytes.NewReader(bts) // 二进制数据
 		} else if str, ok := body.(string); ok {
@@ -108,14 +125,6 @@ func (play *PlayFC) Request(method Method, address string, headers Header, body 
 		req.Header[k] = v
 	}
 	// 发送请求
-	rsp, err := play.client.Do(req)
-	if err != nil {
-		rerr = err
-		return
-	}
-	defer rsp.Body.Close()
-	// 读取响应
-	code = rsp.StatusCode
-	body, rerr = io.ReadAll(rsp.Body)
+	resp, rerr = play.client.Do(req)
 	return
 }
