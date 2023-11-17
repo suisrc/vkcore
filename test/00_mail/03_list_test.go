@@ -9,7 +9,7 @@ import (
 	"github.com/suisrc/vkcore/mailv"
 )
 
-// go test ./test/00_base -v -run Test03
+// go test ./test/00_mail -v -run Test03
 // 测试邮箱清单
 
 func Test03(t *testing.T) {

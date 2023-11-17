@@ -10,7 +10,7 @@ import (
 	"github.com/suisrc/vkcore/mailv"
 )
 
-// go test ./test/00_base -v -run Test02
+// go test ./test/00_mail -v -run Test02
 // 测试获取邮件
 
 func Test02(t *testing.T) {

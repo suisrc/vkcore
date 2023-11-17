@@ -15,7 +15,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// go test ./test/00_base -v -run Test011
+// go test ./test/00_mail -v -run Test011
 // 拷贝和同步outlook邮箱数据
 
 func Test011(t *testing.T) {
