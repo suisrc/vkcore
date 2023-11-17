@@ -83,6 +83,8 @@ func (wright *Playwright) Count() (used, remain int) {
 
 var _ PlayClient = (*PlayWC)(nil)
 
+type WResponse playwright.Response
+
 type PlayWC struct {
 	wright   *Playwright               // 浏览器控制器
 	release  func()                    // 释放浏览器资源的函数
