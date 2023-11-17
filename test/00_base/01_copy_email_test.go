@@ -15,13 +15,17 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// go test ./test/00_base -v -run Test01
+// go test ./test/00_base -v -run Test011
 // 拷贝和同步outlook邮箱数据
 
-func Test01(t *testing.T) {
-	// CopyData()
-	// CreateIndex()
+func Test011(t *testing.T) {
 	UpdateData()
+}
+func Test012(t *testing.T) {
+	CreateIndex()
+}
+func Test013(t *testing.T) {
+	CopyData()
 }
 
 func UpdateData() {
