@@ -36,7 +36,7 @@ func SolverBy2Captcha(conf string, task interface{}) (map[string]interface{}, er
 		return nil, errors.New("err:" + data["errorDescription"].(string))
 	}
 	tid := int(data["taskId"].(float64))
-	for i := 0; i < 60; i++ {
+	for i := 0; i < 20; i++ {
 		bts = []byte{}
 		code := 0
 		err := gout.POST("https://api.2captcha.com/getTaskResult").SetJSON(gout.H{

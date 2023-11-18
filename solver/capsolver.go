@@ -36,7 +36,7 @@ func SolverByCapsolver(conf string, task interface{}) (map[string]interface{}, e
 		return nil, errors.New("err:" + data["errorDescription"].(string))
 	}
 	tid := data["taskId"].(string)
-	for i := 0; i < 45; i++ {
+	for i := 0; i < 30; i++ {
 		bts = []byte{}
 		code := 0
 		err = gout.POST("https://api.capsolver.com/getTaskResult").SetJSON(gout.H{
@@ -65,7 +65,7 @@ func SolverByCapsolver(conf string, task interface{}) (map[string]interface{}, e
 		if status == "ready" {
 			break // 获取到验证码
 		}
-		time.Sleep(time.Second * 1)
+		time.Sleep(time.Second * 2)
 	}
 	if val, ok := data["solution"].(map[string]interface{}); !ok {
 		return nil, errors.New("no solution")

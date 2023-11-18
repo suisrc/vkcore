@@ -31,7 +31,7 @@ func Test23(t *testing.T) {
 	ctx := context.TODO()
 	cll := clm.Collection("mailx")
 
-	mailer := func(to string) string {
+	mailo.MailerForProofsEmail = func(to string) string {
 		return FindEmailByMgo(ctx, cll, to)
 	}
 
@@ -51,7 +51,7 @@ func Test23(t *testing.T) {
 	}
 
 	// 登录页面微软账户系统
-	err = mailo.ManageLiveNames(cli, email, passw, mailer, []string{"1", "2"})
+	err = mailo.AddNames(cli, email, passw, []string{"1", "2"}, 0)
 	if err != nil {
 		logrus.Panic(err)
 	}

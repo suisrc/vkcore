@@ -76,6 +76,7 @@ func LoginLive(cli *httpv.PlayWC, user, pass string) error {
 	logrus.Infof("login user: %s, 完成输入账户", user)
 	// 点击下一步
 	page.Click("input[type=submit]", playwright.PageClickOptions{Delay: playwright.Float(100)})
+	time.Sleep(1 * time.Second)
 	// 等待页面加载完成
 	page.WaitForSelector("input[name=passwd]", playwright.PageWaitForSelectorOptions{
 		State:   playwright.WaitForSelectorStateVisible,

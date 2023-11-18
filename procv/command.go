@@ -132,7 +132,7 @@ func RunWithFind(find Find, exec Exec, cpath string, count int) {
 			return
 		}
 		defer cur.Close(ctx)
-		hdl, _ := httpv.NewPlayFC("")
+		hdl, _ := httpv.NewPlayFCD()
 		defer hdl.Close()
 
 		usrs := []*UserData{}
@@ -178,7 +178,7 @@ func RunWithExec2(find Find, exec Exec2, cpath string, tcnt, ucnt int) {
 			return
 		}
 		defer cur.Close(ctx)
-		hdl, _ := httpv.NewPlayFC("")
+		hdl, _ := httpv.NewPlayFCD()
 		defer hdl.Close()
 		uc := make(chan *UserData, tcnt*2)
 		go func() {

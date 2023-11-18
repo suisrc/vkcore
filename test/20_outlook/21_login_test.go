@@ -29,7 +29,7 @@ func Test21(t *testing.T) {
 		logrus.Panic(err)
 	}
 	// 登录页面微软账户系统
-	err = mailo.LoginLive(cli, email, passw)
+	err = mailo.Login(cli, email, passw, 0)
 	if err != nil {
 		logrus.Panic(err)
 	}

@@ -141,7 +141,8 @@ func Screenshot(page playwright.Page, fpath string) error {
 		return fmt.Errorf("screenshot decode error: %s -> %s", fpath, err.Error())
 	}
 	// 添加时间戳
-	img, err = AddTimestampToImage(img, time.Now().Format("2006-01-02 15:04:05"))
+	txt := time.Now().Format("2006-01-02 15:04:05") + " <- " + page.URL()
+	img, err = AddTextToImage(img, txt)
 	if err != nil {
 		return fmt.Errorf("screenshot timestamp error: %s -> %s", fpath, err.Error())
 	}
@@ -160,7 +161,7 @@ func Screenshot(page playwright.Page, fpath string) error {
 	return nil
 }
 
-func AddTimestampToImage(img image.Image, timestamp string) (image.Image, error) {
+func AddTextToImage(img image.Image, text string) (image.Image, error) {
 	rgba := image.NewRGBA(img.Bounds())
 	draw.Draw(rgba, rgba.Bounds(), img, image.Point{}, draw.Src)
 
@@ -177,7 +178,7 @@ func AddTimestampToImage(img image.Image, timestamp string) (image.Image, error)
 		Face: basicfont.Face7x13,
 		Dot:  fixed.P(x, y),
 	}
-	d.DrawString(timestamp)
+	d.DrawString(text)
 
 	return rgba, nil
 }

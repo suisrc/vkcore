@@ -26,16 +26,20 @@ type PlayFC struct {
 }
 
 func NewPlayFCD() (*PlayFC, error) {
-	return NewPlayFC("")
+	return NewPlayFC("", false)
 }
 
-func NewPlayFC(proxy string) (*PlayFC, error) {
+func NewPlayFC(proxy string, skip_inc bool) (*PlayFC, error) {
 	jar := client.NewCookieJar()
 	options := []client.HttpClientOption{
 		client.WithTimeoutSeconds(30),
 		client.WithClientProfile(profiles.Firefox_117), // 模拟 Firefox 浏览器
 		client.WithNotFollowRedirects(),
 		client.WithCookieJar(jar), // create cookieJar instance and pass it as argument
+		client.WithTimeout(60),
+	}
+	if skip_inc {
+		options = append(options, client.WithInsecureSkipVerify())
 	}
 	client, err := client.NewHttpClient(client.NewNoopLogger(), options...)
 	if err != nil {
@@ -73,7 +77,7 @@ func (play *PlayFC) Request(method Method, address string, headers Header, body 
 	defer resp.Body.Close()
 	// 读取响应
 	code = resp.StatusCode
-	body, rerr = io.ReadAll(resp.Body)
+	data, rerr = io.ReadAll(resp.Body)
 	return
 }
 
