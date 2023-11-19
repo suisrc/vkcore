@@ -36,7 +36,7 @@ func Test21(t *testing.T) {
 }
 
 // go test ./test/20_outlook -v -run Test200
-func Test200(t *testing.T) {
+func Test202(t *testing.T) {
 	path := "/wsc/vkc/vkcore/data/user3/0"
 	// 账户信息
 	bts, _ := os.ReadFile("../../data/user3/20_email.txt")
@@ -58,7 +58,7 @@ func Test200(t *testing.T) {
 }
 
 // go test ./test/20_outlook -v -run Test201
-func Test201(t *testing.T) {
+func Test203(t *testing.T) {
 	path := "/wsc/vkc/vkcore/data/user3/0"
 	// 浏览器持久化信息
 	wright := httpv.NewPlaywright(1)

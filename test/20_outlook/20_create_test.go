@@ -18,13 +18,13 @@ import (
 	"github.com/suisrc/vkcore/solver"
 )
 
-// go test ./test/20_outlook -v -run Test20
+// go test ./test/20_outlook -v -run Test201
 
 // 创建账号
 
 var Proxy = ""
 
-func Test20(t *testing.T) {
+func Test201(t *testing.T) {
 	o0file := "outlook_01.txt"
 	o9file := "outlook_09.txt"
 	// solver.SolverFunc = Solver
