@@ -1,5 +1,7 @@
 package mailo
 
+// 特别声明： 本代码内容仅供学习参考，禁止用于非法用途，否则后果自负。
+
 import (
 	"github.com/sirupsen/logrus"
 	"github.com/suisrc/vkcore/httpv"
