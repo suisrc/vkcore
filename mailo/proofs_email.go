@@ -8,7 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var MailerForProofsEmail func(string) string
+var MailerForProofs func(string) string
 
 // ==================================================================================================
 // 增加备用邮箱 https://account.live.com/proofs/Add?
@@ -21,7 +21,7 @@ func AddProofsEmail(data *ActionData) (accept bool, rerr error) {
 	logrus.Infof("login user: %s, 进入增加备用邮箱流程", data.user)
 	// =======================================================
 	// 执行业务处理
-	if MailerForProofsEmail == nil {
+	if MailerForProofs == nil {
 		rerr = fmt.Errorf("未设置邮件发送函数")
 		return
 	}
@@ -42,7 +42,7 @@ func AddProofsEmail(data *ActionData) (accept bool, rerr error) {
 		return
 	}
 	// 等待确认邮件
-	code := MailerForProofsEmail(bak_email)
+	code := MailerForProofs(bak_email)
 	if code == "" {
 		rerr = fmt.Errorf("未收到邮件")
 		return
@@ -111,7 +111,7 @@ func VerifyProofsEmail(data *ActionData) (accept bool, rerr error) {
 		return
 	}
 	// 等待确认邮件
-	code := MailerForProofsEmail(bak_email)
+	code := MailerForProofs(bak_email)
 	if code == "" {
 		rerr = fmt.Errorf("未收到邮件")
 		return

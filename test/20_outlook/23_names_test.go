@@ -31,7 +31,7 @@ func Test23(t *testing.T) {
 	ctx := context.TODO()
 	cll := clm.Collection("mailx")
 
-	mailo.MailerForProofsEmail = func(to string) string {
+	mailo.MailerForProofs = func(to string) string {
 		return FindEmailByMgo(ctx, cll, to)
 	}
 

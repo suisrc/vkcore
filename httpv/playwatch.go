@@ -141,7 +141,7 @@ func Screenshot(page playwright.Page, fpath string) error {
 		return fmt.Errorf("screenshot decode error: %s -> %s", fpath, err.Error())
 	}
 	// 添加时间戳
-	txt := time.Now().Format("2006-01-02 15:04:05") + " <- " + page.URL()
+	txt := time.Now().Format("2006-01-02 15:04:05") + " " + page.URL()
 	img, err = AddTextToImage(img, txt)
 	if err != nil {
 		return fmt.Errorf("screenshot timestamp error: %s -> %s", fpath, err.Error())
@@ -165,7 +165,7 @@ func AddTextToImage(img image.Image, text string) (image.Image, error) {
 	rgba := image.NewRGBA(img.Bounds())
 	draw.Draw(rgba, rgba.Bounds(), img, image.Point{}, draw.Src)
 
-	x, y := 10, 20
+	x, y := 10, 10
 	fcolor := color.RGBA{255, 255, 255, 255} // white
 	if IsLightColor(img.At(x, y)) {
 		// 如果背景是浅色，就用黑色

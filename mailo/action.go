@@ -1,6 +1,7 @@
 package mailo
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -91,9 +92,11 @@ func WaitForPage(address string, data *ActionData) (bool, error) {
 	var err error
 	wl1 := playwright.PageWaitForLoadStateOptions{State: playwright.LoadStateLoad}
 	wl2 := playwright.PageWaitForLoadStateOptions{State: playwright.LoadStateNetworkidle}
+	cnt := 20
 	for next {
-		for ii := 0; ii < 10; ii++ {
-			time.Sleep(300 * time.Millisecond)
+		cnt--
+		for ii := 0; ii < 5; ii++ {
+			time.Sleep(500 * time.Millisecond)
 			data.page.WaitForLoadState(wl1, wl2, data.wls)
 		}
 		if strings.HasPrefix(data.page.URL(), address) {
@@ -108,6 +111,9 @@ func WaitForPage(address string, data *ActionData) (bool, error) {
 				logrus.Infof("[%s], 操作成功[%s]", data.user, action.Name)
 				break // 执行完成，继续下一个操作
 			}
+		}
+		if cnt <= 0 {
+			return false, fmt.Errorf("请求页面超过次数限制") // 操作超时，直接返回
 		}
 	}
 

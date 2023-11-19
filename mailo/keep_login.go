@@ -8,7 +8,7 @@ import (
 )
 
 // ==================================================================================================
-// 账号保持登录 https://login.live.com/oauth20_authorize.srf?
+// 账号保持登录 https://login.live.com/oauth20_authorize.srf?  KmsiDescription
 func KeepLogin(data *ActionData) (accept bool, rerr error) {
 	// 断言是否处理
 	elm, err := data.page.QuerySelector("#KmsiCheckboxField")
@@ -17,6 +17,12 @@ func KeepLogin(data *ActionData) (accept bool, rerr error) {
 	}
 	accept = true
 	logrus.Infof("login user: %s, 进入账号保持登录流程", data.user)
+
+	// // 打印页面 html
+	// html, _ := data.page.InnerHTML("html")
+	// if html != "" {
+	// 	logrus.Info(html)
+	// }
 	// =======================================================
 	// 执行业务处理
 	if err != nil {
@@ -24,7 +30,8 @@ func KeepLogin(data *ActionData) (accept bool, rerr error) {
 		return
 	}
 	// 保持登录
-	rerr = data.page.Check("#KmsiCheckboxField", playwright.FrameCheckOptions{Force: playwright.Bool(true)})
+	// rerr = data.page.Check("#KmsiCheckboxField", playwright.FrameCheckOptions{Force: playwright.Bool(true)})
+	rerr = elm.Check(playwright.ElementHandleCheckOptions{Force: playwright.Bool(true)})
 	if rerr != nil {
 		return
 	}

@@ -13,7 +13,7 @@ func AddNames(cli *httpv.PlayWC, user, pass string, alias []string, indx int) er
 	if indx == 0 {
 		indx = 1002
 	}
-	return Goto(cli, user, pass, indx, "https://account.live.com/names/Manage", "", func(data *ActionData) error {
+	return Goto2(cli, user, pass, "https://account.live.com/names/Manage", "", func(data *ActionData) error {
 		//======================================================================
 		alias_bak := []string{}
 		for _, suff := range alias {
@@ -64,5 +64,5 @@ func AddNames(cli *httpv.PlayWC, user, pass string, alias []string, indx int) er
 		}
 
 		return nil
-	})
+	}, indx)
 }

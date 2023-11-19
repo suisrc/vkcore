@@ -9,7 +9,7 @@ import (
 // 打印页面cookie
 // https://account.microsoft.com
 func PrintCookies(cli *httpv.PlayWC, user, pass, domain string) error {
-	page, pclr, err := cli.NewPage(1001)
+	page, pclr, err := cli.NewPage(9999)
 	if err != nil {
 		return err
 	}
