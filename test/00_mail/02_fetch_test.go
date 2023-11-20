@@ -32,21 +32,21 @@ func Test02(t *testing.T) {
 	defer cli.Logout()
 
 	//=====================================================================================
-	{ // 获取邮件
-		num, err := mailv.FetchEmail(cli, "", 0, 0, false, func(idx uint32, eml mailv.EmailInfo) error {
-			bts, _ := json.Marshal(eml)
-			logrus.Infof("[%d]: %s", idx, string(bts))
-			return nil
-		})
-		if err != nil {
-			logrus.Errorf("fetch email error: %v", err)
-			return
-		}
-		logrus.Infof("fetch email success, num: %d", num)
-	}
+	// { // 获取邮件
+	// 	num, err := mailv.FetchEmail(cli, "", 0, 0, false, func(idx uint32, eml mailv.EmailInfo) error {
+	// 		bts, _ := json.Marshal(eml)
+	// 		logrus.Infof("[%d]: %s", idx, string(bts))
+	// 		return nil
+	// 	})
+	// 	if err != nil {
+	// 		logrus.Errorf("fetch email error: %v", err)
+	// 		return
+	// 	}
+	// 	logrus.Infof("fetch email success, num: %d", num)
+	// }
 	//=====================================================================================
 	{ // 获取垃圾邮件
-		num, err := mailv.FetchEmail(cli, "Junk", 0, 0, false, func(idx uint32, eml mailv.EmailInfo) error {
+		num, err := mailv.FetchEmail(cli, "Junk", 1, 0, true, func(idx uint32, eml mailv.EmailInfo) error {
 			bts, _ := json.Marshal(eml)
 			logrus.Info("============================================================================")
 			logrus.Infof("[%d]: %s", idx, string(bts))

@@ -28,7 +28,7 @@ func Test201(t *testing.T) {
 	o0file := "outlook_01.txt"
 	o9file := "outlook_09.txt"
 	// solver.SolverFunc = Solver
-	InitProxy() // 初始化代理
+	// InitProxy() // 初始化代理
 	logrus.Info("proxy: ", Proxy, " <<<")
 
 	wright := httpv.NewPlaywright(1)
@@ -181,7 +181,7 @@ func Request2(client httpv.PlayClient, route playwright.Route, body []byte) (rbt
 	sol := ""
 
 	pid := "B7D8911C-5CC8-A9A3-35B0-554ACEE604DA"
-	for ii := 0; ii < 3; ii++ { // 重试5次， 无法解决，跳过
+	for ii := 0; ii < 1; ii++ { // 重试几次， 无法解决，跳过。 试验证明， capsolver一次不成功，后面也不会成功
 		// 目前看， 2captcha 无法解决挑战问题
 		// cap, err := solver.SolverBy2Captcha("../../data/conf/11_2captcha.key", gout.H{
 		// 	"type":                     "FunCaptchaTaskProxyless",
