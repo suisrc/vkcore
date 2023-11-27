@@ -75,7 +75,8 @@ func Goto2(cli *httpv.PlayWC, user, pass string, addr1, addr2 string, callback f
 		return err
 	} else if !succ {
 		html, _ := page.InnerHTML("html") // 没有成功打开目前页面，打印当前停留的页面信息
-		logrus.Infof("[%s], can not open target page: >>> %s ", user, html)
+		purl := page.URL()
+		logrus.Infof("[%s], can not open target page: >>> %s >>> %s ", user, purl, html)
 		return fmt.Errorf("can not open target page")
 	}
 	if callback == nil {

@@ -28,7 +28,7 @@ openssl genrsa -out default.key.pem 2048
 # 生成自签名证书
 openssl req -new -x509 -key default.key -out default.crt.pem -days 36500
 ```
- ## palywright
+ ## playwright
 
  ``` bash
 # use
