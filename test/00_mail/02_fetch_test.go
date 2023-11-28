@@ -47,6 +47,9 @@ func Test02(t *testing.T) {
 	//=====================================================================================
 	{ // 获取垃圾邮件
 		num, err := mailv.FetchEmail(cli, "Junk", 1, 0, true, func(idx uint32, eml mailv.EmailInfo) error {
+			if !strings.Contains(eml.From, "republik") {
+				return nil
+			}
 			bts, _ := json.Marshal(eml)
 			logrus.Info("============================================================================")
 			logrus.Infof("[%d]: %s", idx, string(bts))

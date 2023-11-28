@@ -20,6 +20,9 @@ import (
 
 // go test ./test/20_outlook -v -run Test201
 
+// rm -rf ./data/user3/0
+// mv ./data/user3/0 ./data/user3/00
+
 // 创建账号
 
 var Proxy = ""
@@ -28,8 +31,10 @@ func Test201(t *testing.T) {
 	o0file := "outlook_01.txt"
 	o9file := "outlook_09.txt"
 	// solver.SolverFunc = Solver
-	// InitProxy() // 初始化代理
+	InitProxy() // 初始化代理
 	logrus.Info("proxy: ", Proxy, " <<<")
+
+	httpv.SFII = 1 // 监控间隔
 
 	wright := httpv.NewPlaywright(1)
 	defer wright.Close()

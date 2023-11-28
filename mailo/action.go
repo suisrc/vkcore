@@ -97,7 +97,7 @@ func WaitForPage(address string, data *ActionData) (bool, error) {
 	cnt := 20
 	for next {
 		cnt--
-		for ii := 0; ii < 5; ii++ {
+		for ii := 0; ii < 10; ii++ {
 			time.Sleep(500 * time.Millisecond)
 			data.page.WaitForLoadState(wl1, wl2, data.wls)
 		}

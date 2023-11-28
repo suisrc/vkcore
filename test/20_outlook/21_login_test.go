@@ -10,10 +10,11 @@ import (
 	"github.com/suisrc/vkcore/mailo"
 )
 
-// go test ./test/20_outlook -v -run Test21
+// go test ./test/20_outlook -v -run Test210
 // 测试从浏览器登录系统
 
-func Test21(t *testing.T) {
+func Test210(t *testing.T) {
+	httpv.SFII = 1
 	// 账户信息
 	bts, _ := os.ReadFile("../../data/conf/21_email.txt")
 	str_ns := strings.SplitN(string(bts), "-------", 2)

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/guonaihong/gout"
 	"github.com/guonaihong/gout/dataflow"
 )
 
@@ -20,11 +21,11 @@ type PlayHC struct {
 }
 
 func NewPlayHCD() (*PlayHC, error) {
-	return NewPlayHC("")
+	return NewPlayHC("", false)
 }
 
 // http client
-func NewPlayHC(proxy string) (*PlayHC, error) {
+func NewPlayHC(proxy string, skip_inc bool) (*PlayHC, error) {
 	client := dataflow.New()
 	if proxy != "" {
 		client.SetProxy(proxy)
@@ -53,17 +54,22 @@ func (play *PlayHC) Request(method Method, address string, headers Header, body 
 	play.count++ // 请求次数统计， 无论成功与否
 	// 创建请求
 	play.client.DataFlow.SetMethod(string(method)).SetURL(address)
+
+	header := gout.H{}
 	play.client.DataFlow.SetHeader("Accept-Language", "en-US,en;q=0.9") // zh-CN,zh;q=0.9,en;q=0.8
 	if accept != "" {
-		play.client.DataFlow.SetHeader("Accept", accept)
+		header["Accept"] = accept
 	}
 	if uagent != "" {
-		play.client.DataFlow.SetHeader("User-Agent", uagent)
+		header["User-Agent"] = uagent
 	}
 	for kk, vv := range headers {
 		for _, vvv := range vv {
-			play.client.DataFlow.SetHeader(kk, vvv)
+			header[kk] = vvv
 		}
+	}
+	if len(header) > 0 {
+		play.client.DataFlow.SetHeader(header)
 	}
 	if body != nil {
 		// play.client.DataFlow.SetBody(body)
