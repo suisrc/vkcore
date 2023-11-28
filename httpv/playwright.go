@@ -156,6 +156,11 @@ func (play *PlayWC) Context() playwright.BrowserContext {
 }
 
 func (play *PlayWC) NewPage(indx int) (page playwright.Page, pclr func(), rerr error) {
+	// 创建页面, 每次请求，必须是一个新页面，否则会导致页面中断
+	headers := map[string]string{
+		"accept-language":           "en-US,en;q=0.9", // zh-CN,zh;q=0.9,en;q=0.8
+		"upgrade-insecure-requests": "0",
+	}
 	// 初始化浏览器控制器
 	play.once.Do(func() {
 		if play.wright.closed {
@@ -174,8 +179,11 @@ func (play *PlayWC) NewPage(indx int) (page playwright.Page, pclr func(), rerr e
 		} else {
 			// 用户模式
 			options := playwright.BrowserTypeLaunchPersistentContextOptions{
-				Headless: playwright.Bool(true), // 无头模式
-				Proxy:    proxy,                 // 代理配置
+				Headless:          playwright.Bool(true), // 无头模式
+				Proxy:             proxy,                 // 代理配置
+				IgnoreHttpsErrors: playwright.Bool(true),
+				JavaScriptEnabled: playwright.Bool(true),
+				ExtraHttpHeaders:  headers,
 			}
 			play.context, rerr = play.wright.client.Firefox.LaunchPersistentContext(play.user_dir, options)
 			if rerr == nil {
@@ -186,19 +194,11 @@ func (play *PlayWC) NewPage(indx int) (page playwright.Page, pclr func(), rerr e
 	if rerr != nil {
 		return
 	}
-	// 创建页面, 每次请求，必须是一个新页面，否则会导致页面中断
-	headers := map[string]string{
-		"accept-language":           "en-US,en;q=0.9", // zh-CN,zh;q=0.9,en;q=0.8
-		"upgrade-insecure-requests": "0",
-	}
 	if play.context != nil {
-		page, rerr = play.context.NewPage(playwright.BrowserNewPageOptions{
-			IgnoreHttpsErrors: playwright.Bool(true),
-			JavaScriptEnabled: playwright.Bool(true),
-			ExtraHttpHeaders:  headers,
-		})
+		page, rerr = play.context.NewPage()
+		// @see BrowserTypeLaunchPersistentContextOptions
 	} else {
-		page, rerr = play.browser.NewPage(playwright.BrowserNewContextOptions{
+		page, rerr = play.browser.NewPage(playwright.BrowserNewPageOptions{
 			IgnoreHttpsErrors: playwright.Bool(true),
 			JavaScriptEnabled: playwright.Bool(true),
 			ExtraHttpHeaders:  headers,
@@ -208,9 +208,8 @@ func (play *PlayWC) NewPage(indx int) (page playwright.Page, pclr func(), rerr e
 		return
 	}
 	// 消除 webdriver 检测
-	script := `Object.defineProperty(Object.getPrototypeOf(navigator), 'webdriver', { get: () => false })`
-	page.AddInitScript(playwright.PageAddInitScriptOptions{
-		Script: &script,
+	page.AddInitScript(playwright.Script{
+		Content: playwright.String(`Object.defineProperty(Object.getPrototypeOf(navigator), 'webdriver', { get: () => false })`),
 	})
 
 	// 默认比例
@@ -561,13 +560,13 @@ func ParseProxy(proxy string) *playwright.Proxy {
 		// socks5 直接配置
 		logrus.Debug("proxy: ", proxy)
 		return &playwright.Proxy{
-			Server: playwright.String(proxy),
+			Server: proxy,
 		}
 	} else if idx := strings.Index(proxy, "@"); idx < 0 {
 		// http 没有账号，直接配置
 		logrus.Debug("proxy: ", proxy)
 		return &playwright.Proxy{
-			Server: playwright.String(proxy),
+			Server: proxy,
 		}
 	} else {
 		// 剥离账号密码，再配置，否则会导致代理无效，亲测有问题
@@ -580,7 +579,7 @@ func ParseProxy(proxy string) *playwright.Proxy {
 		}
 		logrus.Debug("proxy: ", sche, urlx, ", user: ", user, ":", pass)
 		return &playwright.Proxy{
-			Server:   playwright.String(sche + urlx),
+			Server:   sche + urlx,
 			Username: playwright.String(user),
 			Password: playwright.String(pass),
 		}
